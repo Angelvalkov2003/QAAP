@@ -11,8 +11,8 @@
     <header>
         <nav>
             <h1>Task layout</h1>
-            <a href="/tasks">All tasks</a>
-            <a href="/tasks/create">Create new task</a>
+            <a href="{{ route('tasks.index')}}">All tasks</a>
+            <a href="{{ route('tasks.create')}}">Create new task</a>
         </nav>
     </header>
 

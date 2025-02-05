@@ -7,8 +7,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/tasks', [TaskController::class, 'index']);
+Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
 
-Route::get('/tasks/create', [TaskController::class, 'create']);
+Route::get('/tasks/create', [TaskController::class, 'create'])->name('tasks.create');
 
-Route::get('/tasks/{id}', [TaskController::class, 'show']);
+Route::get('/tasks/{id}', [TaskController::class, 'show'])->name('tasks.show');
