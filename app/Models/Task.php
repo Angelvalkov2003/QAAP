@@ -16,4 +16,19 @@ class Task extends Model
         'user_id',
         'status_id'
     ];
+
+    public function region()
+    {
+        return $this->belongsTo(Region::class);
+    }
+
+    public function status()
+    {
+        return $this->belongsTo(Status::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
