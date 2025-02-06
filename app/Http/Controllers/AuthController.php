@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -32,9 +33,32 @@ class AuthController extends Controller
         return redirect()->route('tasks.index')->with('success', 'User registered!');
     }
 
-    public function login()
+    public function login(Request $request)
     {
+        $validated = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
 
+        if (Auth::attempt($validated)) {
+            $request->session()->regenerate();
+
+            return redirect()->route('tasks.index')->with('success', 'Logged in!');
+        }
+
+        throw ValidationException::withMessages(['credentials' => 'Incorrect credetials']);
+
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout(); //mahame samo login 
+
+        $request->session()->invalidate(); //Mahame vsqkakva data ot session
+
+        $request->session()->regenerateToken(); //regenerira crfs tokena za slevasha sesiq
+
+        return redirect()->route('tasks.index')->with('success', 'Logout!');
     }
 
 }

@@ -18,10 +18,23 @@
         <nav>
             <h1>QA allocation program</h1>
             <a href="{{ route('tasks.index')}}">All tasks</a>
-            <a href="{{ route('tasks.create')}}">Create new task</a>
 
-            <a href="{{ route('show.login') }}" class="btn">Login</a>
-            <a href="{{ route('show.register')}}" class="btn">Register</a>
+            @guest
+                <a href="{{ route('show.login') }}" class="btn">Login</a>
+                <a href="{{ route('show.register')}}" class="btn">Register</a>
+            @endguest
+
+            @auth
+                <span class="border-r-2 pr-2">
+                    Hi, {{ Auth::user()->name }}
+                </span>
+                <a href="{{ route('tasks.create')}}">Create new task</a>
+
+                <form action="{{ route('logout') }}" method="Post" class="m-0">
+                    @csrf
+                    <button class="btn">Logout</button>
+                </form>
+            @endauth
 
         </nav>
     </header>
