@@ -40,9 +40,12 @@ class TaskController extends Controller
             'description' => 'required|string|min:20|max:1000',
             'region_id' => 'required|exists:regions,id',
             'status_id' => 'required|exists:statuses,id',
-            'user_id' => 'required|exists:users,id',
         ]);
+
+        $validated['user_id'] = auth()->id();
+
         Task::create($validated);
+
         return redirect()->route('tasks.index')->with('success', 'Task Created!');
     }
 
@@ -63,9 +66,70 @@ class TaskController extends Controller
 
         return view('tasks.index', [
             "tasks" => $tasks,
-            "region" => $region, // Selected region
-            "regions" => $regions // Ensure all regions are available in the view
+            "region" => $region,
+            "regions" => $regions
         ]);
+    }
+
+    public function edit($id)
+    {
+        $task = Task::findOrFail($id);
+
+        if (auth()->id() !== $task->user_id) {
+            abort(403, 'This action is unauthorized.');
+        }
+
+        $regions = Region::all();
+        $statuses = Status::all();
+
+        return view('tasks.edit', compact('task', 'regions', 'statuses'));
+    }
+
+
+    public function update(Request $request, $id)
+    {
+        $task = Task::findOrFail($id);
+
+        if (auth()->id() !== $task->user_id) {
+            abort(403, 'This action is unauthorized.');
+        }
+
+        $validated = $request->validate([
+            'label' => 'required|string|max:255',
+            'description' => 'required|string|min:20|max:1000',
+            'region_id' => 'required|exists:regions,id',
+            'status_id' => 'required|exists:statuses,id',
+        ]);
+
+        $task->update($validated);
+
+        return redirect()->route('tasks.index')->with('success', 'Task updated successfully!');
+    }
+
+
+    public function search(Request $request)
+    {
+
+        $request->validate([
+            'query' => 'nullable|string|max:255',
+        ]);
+
+
+        $query = $request->input('query');
+
+
+        $tasks = Task::query();
+
+
+        if ($query) {
+            $tasks = $tasks->where('label', 'like', "%{$query}%");
+        }
+
+
+        $tasks = $tasks->get();
+
+
+        return view('tasks.index', compact('tasks'));
     }
 
 

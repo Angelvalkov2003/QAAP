@@ -42,15 +42,6 @@
             @endforeach
         </select>
 
-        <label for="user_id">User:</label>
-        <select id="user_id" name="user_id" required>
-            <option value="" disabled selected>Select a user</option>
-            @foreach ($users as $user)
-                <option value="{{ $user->id }}" {{ $user->id == old('user_id') ? 'selected' : '' }}>
-                    {{ $user->name }}
-                </option>
-            @endforeach
-        </select>
 
         <button type="submit" class="btn mt-4">Create Task</button>
 

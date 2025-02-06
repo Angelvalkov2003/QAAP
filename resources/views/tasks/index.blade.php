@@ -1,4 +1,13 @@
 <x-layout>
+
+    @auth
+        <form action="{{ route('tasks.search') }}" method="GET">
+            @csrf
+            <input type="text" name="query" placeholder="Search tasks..." value="{{ request()->query('query') }}" required>
+            <button type="submit">Search</button>
+        </form>
+    @endauth
+
     <ul>
         @foreach ($regions as $region)
         <li>

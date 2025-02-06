@@ -6,10 +6,15 @@
     <p><strong>Status:</strong> {{ $task->status->name ?? 'Unknown' }}</p>
     <p><strong>Assigned User:</strong> {{ $task->user->name ?? 'Unassigned' }}</p>
 
-    <form action="{{ route('tasks.destroy', $task->id)}}" method="POST">
-        @csrf
-        @method('DELETE')
+    @if (auth()->id() === $task->user_id)
 
-        <button type="submit" class="btn my-4">Delete task</button>
-    </form>
+        <a href="{{ route('tasks.edit', $task->id) }}" class="btn my-2">Edit Task</a>
+
+
+        <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" class="mt-2">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn my-4">Delete Task</button>
+        </form>
+    @endif
 </x-layout>
