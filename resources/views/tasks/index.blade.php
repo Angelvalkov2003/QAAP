@@ -9,11 +9,6 @@
         @endforeach
     </ul>
     
-    <a href="/tasks" class="btn">All tasks</a>
-    <h2>
-        Tasks:
-    </h2>
-
     <ul>
         @foreach ($tasks as $task)
         <li>

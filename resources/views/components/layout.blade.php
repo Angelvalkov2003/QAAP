@@ -16,9 +16,13 @@
 
     <header>
         <nav>
-            <h1>Task layout</h1>
+            <h1>QA allocation program</h1>
             <a href="{{ route('tasks.index')}}">All tasks</a>
             <a href="{{ route('tasks.create')}}">Create new task</a>
+
+            <a href="{{ route('show.login') }}" class="btn">Login</a>
+            <a href="{{ route('show.register')}}" class="btn">Register</a>
+
         </nav>
     </header>
 
