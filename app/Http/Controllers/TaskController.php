@@ -109,27 +109,22 @@ class TaskController extends Controller
 
     public function search(Request $request)
     {
+        $regions = Region::all();
 
         $request->validate([
             'query' => 'nullable|string|max:255',
         ]);
 
-
         $query = $request->input('query');
 
+        $tasks = Task::when($query, function ($queryBuilder) use ($query) {
+            $queryBuilder->where('label', 'like', "%{$query}%")
+                ->orWhere('description', 'like', "%{$query}%");
+        })
+            ->orderBy('status_id')
+            ->paginate(10);
 
-        $tasks = Task::query();
-
-
-        if ($query) {
-            $tasks = $tasks->where('label', 'like', "%{$query}%");
-        }
-
-
-        $tasks = $tasks->get();
-
-
-        return view('tasks.index', compact('tasks'));
+        return view('tasks.index', ["tasks" => $tasks, "regions" => $regions]);
     }
 
 

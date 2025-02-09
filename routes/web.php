@@ -17,8 +17,10 @@ Route::middleware(['guest'])->controller(AuthController::class)->group(function 
 
 Route::post('/logout', [AuthController::class, 'Logout'])->name('logout');
 
+
 // pravi middleware koyto proverqva dali sa auth na vsichki path v nego i dobavq che polzvame TaskController za vsichki
 Route::middleware(['auth'])->controller(TaskController::class)->group(function () {
+    Route::get('/tasks/search', 'search')->name('tasks.search');
     Route::get('/tasks', 'index')->name('tasks.index');
     Route::get('/tasks/create', 'create')->name('tasks.create');
     Route::get('/tasks/{id}', 'show')->name('tasks.show');
@@ -31,5 +33,4 @@ Route::middleware(['auth'])->controller(TaskController::class)->group(function (
 
     Route::get('/tasks/region/{id}', 'region')->name('tasks.region');
 
-    Route::get('/tasks/search', 'search')->name('tasks.search');
 });

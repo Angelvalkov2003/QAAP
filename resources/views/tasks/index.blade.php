@@ -1,22 +1,27 @@
 <x-layout>
-
     @auth
-        <form action="{{ route('tasks.search') }}" method="GET">
-            @csrf
-            <input type="text" name="query" placeholder="Search tasks..." value="{{ request()->query('query') }}" required>
-            <button type="submit">Search</button>
-        </form>
+    <form action="{{ route('tasks.search') }}" method="GET" class="flex items-center space-x-2">
+        <input type="text" name="query" placeholder="Search tasks by label and description..." class="p-2 border border-gray-300 rounded">
+        <button type="submit" class="py-1 px-3 bg-white hover:bg-red-500 hover:text-white border border-gray-300">Search</button>
+    </form>
+    
+    
+    
+    
+    
     @endauth
-
-    <ul>
+    <ul class="flex flex-col sm:flex-row space-y-2 sm:space-x-4 sm:space-y-0">
         @foreach ($regions as $region)
-        <li>
-            <a href="{{ route('tasks.region', $region->id) }}" class="">
+        <li class="w-full sm:w-auto">
+            <a href="{{ route('tasks.region', $region->id) }}" class="block p-4 bg-white hover:bg-red-500 hover:text-white font-semibold text-center w-32 h-12 flex items-center justify-center transition-all">
                 <h3>{{ $region->name }}</h3>
             </a>
         </li>
         @endforeach
     </ul>
+    
+    
+    
     
     <ul>
         @foreach ($tasks as $task)
