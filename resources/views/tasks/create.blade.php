@@ -11,7 +11,7 @@
             id="label" 
             name="label" 
             value="{{ old('label') }}" 
-            required
+
         >
 
         <label for="description">Description:</label>
@@ -19,11 +19,11 @@
             rows="15"
             id="description" 
             name="description" 
-            required
+
         >{{ old('description') }}</textarea>
 
         <label for="region_id">Region:</label>
-        <select id="region_id" name="region_id" required>
+        <select id="region_id" name="region_id">
             <option value="" disabled selected>Select a region</option>
             @foreach ($regions as $region)
                 <option value="{{ $region->id }}" {{ $region->id == old('region_id') ? 'selected' : '' }}>
@@ -33,7 +33,7 @@
         </select>
 
         <label for="status_id">Status:</label>
-        <select id="status_id" name="status_id" required>
+        <select id="status_id" name="status_id">
             <option value="" disabled selected>Select a status</option>
             @foreach ($statuses as $status)
                 <option value="{{ $status->id }}" {{ $status->id == old('status_id') ? 'selected' : '' }}>

@@ -13,13 +13,17 @@ class TaskController extends Controller
     public function index()
     {
         $regions = Region::all();
-        $tasks = Task::orderBy('status_id', 'asc')->paginate(10);
+        $tasks = Task::where('user_id', auth()->id())
+            ->orderBy('status_id', 'asc')
+            ->paginate(10);
         return view('tasks.index', ["tasks" => $tasks, "regions" => $regions]);
     }
 
     public function show($id)
     {
-        $task = Task::with(['region', 'status', 'user'])->findOrFail($id);
+        $task = Task::with(['region', 'status', 'user'])
+            ->where('user_id', auth()->id())
+            ->findOrFail($id);
         return view('tasks.show', ["task" => $task]);
     }
 
@@ -52,6 +56,11 @@ class TaskController extends Controller
     public function destroy($id)
     {
         $task = Task::findOrFail($id);
+
+        if ($task->user_id !== auth()->id()) {
+            return redirect()->route('tasks.index')->with('error', 'this task is not yours.');
+        }
+
         $task->delete();
         return redirect()->route('tasks.index')->with('success', 'Task Deleted');
     }
@@ -59,8 +68,10 @@ class TaskController extends Controller
     public function region($id)
     {
         $region = Region::findOrFail($id);
-        $regions = Region::all(); // Get all regions for the sidebar/menu
+        $regions = Region::all();
+
         $tasks = Task::where('region_id', $id)
+            ->where('user_id', auth()->id())
             ->orderBy('status_id', 'asc')
             ->paginate(10);
 
@@ -71,12 +82,13 @@ class TaskController extends Controller
         ]);
     }
 
+
     public function edit($id)
     {
         $task = Task::findOrFail($id);
 
-        if (auth()->id() !== $task->user_id) {
-            abort(403, 'This action is unauthorized.');
+        if ($task->user_id !== auth()->id()) {
+            return redirect()->route('tasks.index')->with('error', 'this task is not yours.');
         }
 
         $regions = Region::all();
@@ -90,8 +102,8 @@ class TaskController extends Controller
     {
         $task = Task::findOrFail($id);
 
-        if (auth()->id() !== $task->user_id) {
-            abort(403, 'This action is unauthorized.');
+        if ($task->user_id !== auth()->id()) {
+            return redirect()->route('tasks.index')->with('error', 'this task is not yours.');
         }
 
         $validated = $request->validate([
@@ -117,15 +129,19 @@ class TaskController extends Controller
 
         $query = $request->input('query');
 
-        $tasks = Task::when($query, function ($queryBuilder) use ($query) {
-            $queryBuilder->where('label', 'like', "%{$query}%")
-                ->orWhere('description', 'like', "%{$query}%");
-        })
+        $tasks = Task::where('user_id', auth()->id())
+            ->when($query, function ($queryBuilder) use ($query) {
+                $queryBuilder->where(function ($q) use ($query) {
+                    $q->where('label', 'like', "%{$query}%")
+                        ->orWhere('description', 'like', "%{$query}%");
+                });
+            })
             ->orderBy('status_id')
             ->paginate(10);
 
         return view('tasks.index', ["tasks" => $tasks, "regions" => $regions]);
     }
+
 
 
 }
