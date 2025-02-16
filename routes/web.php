@@ -34,7 +34,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/tasks/region/{id}', [TaskController::class, 'region'])->name('tasks.region');
 
 
+
     Route::get('/folders/create', [FolderController::class, 'create'])->name('folders.create');
     Route::post('/folders', [FolderController::class, 'store'])->name('folders.store');
+    Route::get('/folders/{id}', [FolderController::class, 'show'])->name('folders.show');
 });
 

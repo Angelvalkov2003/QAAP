@@ -20,7 +20,25 @@
         @endforeach
     </ul>
     
+    <ul>
+        @if (isset($currentFolder))
+        <li>
+            <div class='card'>
+                <h3>.. </h3>
+                <a href="{{ $parentFolderId ? route('folders.show', $parentFolderId) : route('tasks.index') }}" class="btn">Go Back</a>
+            </div>
+        </li>
+    @endif
     
+        @foreach ($folders as $folder)
+            <li>
+                <div class='card'>
+                    <h3>{{ $folder->name }}</h3>
+                    <a href="{{ route('folders.show', $folder->id) }}" class="btn">View Details</a>
+                </div>
+            </li>
+        @endforeach
+    </ul>
     
     
     <ul>

@@ -15,9 +15,16 @@ class TaskController extends Controller
     {
         $regions = Region::all();
         $tasks = Task::where('user_id', auth()->id())
+            ->whereNull('parent_id')
             ->orderBy('status_id', 'asc')
             ->paginate(10);
-        return view('tasks.index', ["tasks" => $tasks, "regions" => $regions]);
+
+
+        $folders = Folder::where('user_id', auth()->id())
+            ->whereNull('parent_id')
+            ->get();
+
+        return view('tasks.index', ["tasks" => $tasks, "regions" => $regions, "folders" => $folders]);
     }
 
     public function show($id)
@@ -81,6 +88,9 @@ class TaskController extends Controller
     {
         $region = Region::findOrFail($id);
         $regions = Region::all();
+        $folders = Folder::where('user_id', auth()->id())
+            ->whereNull('parent_id')
+            ->get();
 
         $tasks = Task::where('region_id', $id)
             ->where('user_id', auth()->id())
@@ -90,7 +100,8 @@ class TaskController extends Controller
         return view('tasks.index', [
             "tasks" => $tasks,
             "region" => $region,
-            "regions" => $regions
+            "regions" => $regions,
+            "folders" => $folders
         ]);
     }
 
@@ -148,6 +159,10 @@ class TaskController extends Controller
             'query' => 'nullable|string|max:255',
         ]);
 
+        $folders = Folder::where('user_id', auth()->id())
+            ->whereNull('parent_id')
+            ->get();
+
         $query = $request->input('query');
 
         $tasks = Task::where('user_id', auth()->id())
@@ -160,7 +175,7 @@ class TaskController extends Controller
             ->orderBy('status_id')
             ->paginate(10);
 
-        return view('tasks.index', ["tasks" => $tasks, "regions" => $regions]);
+        return view('tasks.index', ["tasks" => $tasks, "regions" => $regions, "folders" => $folders]);
     }
 
 

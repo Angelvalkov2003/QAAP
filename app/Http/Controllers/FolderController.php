@@ -38,4 +38,35 @@ class FolderController extends Controller
         // Redirect to tasks index with success message
         return redirect()->route('tasks.index')->with('success', 'Folder Created!');
     }
+
+    public function show($id)
+    {
+        $regions = Region::all();
+
+        $folder = Folder::findOrFail($id);
+
+        $parentFolderId = $folder->parent_id;
+
+
+        $folder = Folder::where('id', $id)
+            ->where('user_id', auth()->id())
+            ->firstOrFail();
+
+        $folders = Folder::where('parent_id', $id)
+            ->where('user_id', auth()->id())
+            ->get();
+
+        $tasks = Task::where('parent_id', $id)
+            ->where('user_id', auth()->id())
+            ->orderBy('status_id', 'asc')
+            ->paginate(10);
+
+        return view('tasks.index', [
+            "tasks" => $tasks,
+            "regions" => $regions,
+            "folders" => $folders,
+            "currentFolder" => $folder,
+            "parentFolderId" => $parentFolderId
+        ]);
+    }
 }
