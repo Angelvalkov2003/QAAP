@@ -42,6 +42,17 @@
             @endforeach
         </select>
 
+        <label for="parent_id">Folder:</label>
+        <select id="parent_id" name="parent_id">
+            <option value="" {{ old('parent_id') == '' ? 'selected' : '' }}>Root folder</option>
+            @foreach ($folders as $folder)
+                <option value="{{ $folder->id }}" {{ $folder->id == old('parent_id') ? 'selected' : '' }}>
+                    {{ $folder->name }}
+                </option>
+            @endforeach
+        </select>
+        
+
 
         <button type="submit" class="btn mt-4">Create Task</button>
 

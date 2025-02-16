@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Folder;
 use App\Models\Task;
 use App\Models\Status;
 use App\Models\Region;
@@ -21,20 +22,26 @@ class TaskController extends Controller
 
     public function show($id)
     {
-        $task = Task::with(['region', 'status', 'user'])
+        $task = Task::with(['region', 'status', 'user', 'parentFolder'])
             ->where('user_id', auth()->id())
             ->findOrFail($id);
+
         return view('tasks.show', ["task" => $task]);
     }
 
+
     public function create()
     {
-        $tasks = Task::all();
-        $regions = Region::all();
-        $statuses = Status::all();
-        $users = User::all();
+        $userId = auth()->id();
 
-        return view('tasks.create', ['tasks' => $tasks, 'regions' => $regions, 'statuses' => $statuses, 'users' => $users]);
+        $tasks = Task::where('user_id', $userId)->get();
+        $regions = Region::all();
+
+        $statuses = Status::all();
+        $users = User::where('id', $userId)->get();
+        $folders = Folder::where('user_id', $userId)->get();
+
+        return view('tasks.create', compact('tasks', 'regions', 'statuses', 'users', 'folders'));
     }
 
     public function store(Request $request)
@@ -44,14 +51,19 @@ class TaskController extends Controller
             'description' => 'required|string|min:20|max:1000',
             'region_id' => 'required|exists:regions,id',
             'status_id' => 'required|exists:statuses,id',
+            'parent_id' => 'nullable|exists:folders,id,user_id,' . auth()->id(),
         ]);
+
 
         $validated['user_id'] = auth()->id();
 
+
         Task::create($validated);
+
 
         return redirect()->route('tasks.index')->with('success', 'Task Created!');
     }
+
 
     public function destroy($id)
     {
@@ -85,17 +97,25 @@ class TaskController extends Controller
 
     public function edit($id)
     {
+
         $task = Task::findOrFail($id);
 
+
         if ($task->user_id !== auth()->id()) {
-            return redirect()->route('tasks.index')->with('error', 'this task is not yours.');
+            return redirect()->route('tasks.index')->with('error', 'This task is not yours.');
         }
+
 
         $regions = Region::all();
         $statuses = Status::all();
 
-        return view('tasks.edit', compact('task', 'regions', 'statuses'));
+
+        $folders = Folder::where('user_id', auth()->id())->get();
+
+
+        return view('tasks.edit', compact('task', 'regions', 'statuses', 'folders'));
     }
+
 
 
     public function update(Request $request, $id)
@@ -111,6 +131,7 @@ class TaskController extends Controller
             'description' => 'required|string|min:20|max:1000',
             'region_id' => 'required|exists:regions,id',
             'status_id' => 'required|exists:statuses,id',
+            'parent_id' => 'nullable|exists:folders,id,user_id,' . auth()->id(),
         ]);
 
         $task->update($validated);
@@ -141,7 +162,6 @@ class TaskController extends Controller
 
         return view('tasks.index', ["tasks" => $tasks, "regions" => $regions]);
     }
-
 
 
 }

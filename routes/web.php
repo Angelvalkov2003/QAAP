@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FolderController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -18,19 +19,22 @@ Route::middleware(['guest'])->controller(AuthController::class)->group(function 
 Route::post('/logout', [AuthController::class, 'Logout'])->name('logout');
 
 
+
 // pravi middleware koyto proverqva dali sa auth na vsichki path v nego i dobavq che polzvame TaskController za vsichki
-Route::middleware(['auth'])->controller(TaskController::class)->group(function () {
-    Route::get('/tasks/search', 'search')->name('tasks.search');
-    Route::get('/tasks', 'index')->name('tasks.index');
-    Route::get('/tasks/create', 'create')->name('tasks.create');
-    Route::get('/tasks/{id}', 'show')->name('tasks.show');
-    Route::post('/tasks', 'store')->name('tasks.store');
+Route::middleware(['auth'])->group(function () {
 
-    Route::get('/tasks/{id}/edit', 'edit')->name('tasks.edit');
-    Route::put('/tasks/{id}', 'update')->name('tasks.update');
+    Route::get('/tasks/search', [TaskController::class, 'search'])->name('tasks.search');
+    Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
+    Route::get('/tasks/create', [TaskController::class, 'create'])->name('tasks.create');
+    Route::get('/tasks/{id}', [TaskController::class, 'show'])->name('tasks.show');
+    Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
+    Route::get('/tasks/{id}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
+    Route::put('/tasks/{id}', [TaskController::class, 'update'])->name('tasks.update');
+    Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+    Route::get('/tasks/region/{id}', [TaskController::class, 'region'])->name('tasks.region');
 
-    Route::delete('/tasks/{id}', 'destroy')->name('tasks.destroy');
 
-    Route::get('/tasks/region/{id}', 'region')->name('tasks.region');
-
+    Route::get('/folders/create', [FolderController::class, 'create'])->name('folders.create');
+    Route::post('/folders', [FolderController::class, 'store'])->name('folders.store');
 });
+

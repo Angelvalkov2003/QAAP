@@ -5,6 +5,13 @@
     <p><strong>Region:</strong> {{ $task->region->name ?? 'Unknown' }}</p>
     <p><strong>Status:</strong> {{ $task->status->name ?? 'Unknown' }}</p>
     <p><strong>Assigned User:</strong> {{ $task->user->name ?? 'Unassigned' }}</p>
+    <p><strong>Folder:</strong>
+        @if ($task->parentFolder)
+            {{ $task->parentFolder->name }}
+        @else
+            Root Folder
+        @endif
+    </p>
 
     @if (auth()->id() === $task->user_id)
 

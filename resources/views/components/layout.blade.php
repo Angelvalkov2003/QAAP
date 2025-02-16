@@ -30,6 +30,9 @@
                 </span>
                 <a href="{{ route('tasks.create')}}">Create new task</a>
 
+                <a href="{{ route('folders.create') }}">Create Folder</a>
+
+
                 <form action="{{ route('logout') }}" method="Post" class="m-0">
                     @csrf
                     <button class="btn">Logout</button>
