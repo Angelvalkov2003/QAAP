@@ -69,4 +69,62 @@ class FolderController extends Controller
             "parentFolderId" => $parentFolderId
         ]);
     }
+
+    public function edit($id)
+    {
+
+        $folder = Folder::findOrFail($id);
+
+
+        if ($folder->user_id !== auth()->id()) {
+            return redirect()->route('tasks.index')->with('error', 'This task is not yours.');
+        }
+
+        $folders = Folder::where('user_id', auth()->id())->get();
+
+
+        return view('folders.edit', compact('folder', 'folders'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $folder = Folder::findOrFail($id);
+
+        if ($folder->user_id !== auth()->id()) {
+            return redirect()->route('tasks.index')->with('error', 'this task is not yours.');
+        }
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'parent_id' => 'nullable|exists:folders,id,user_id,' . auth()->id(),
+        ]);
+
+        $folder->update($validated);
+
+        return redirect()->route('tasks.index')->with('success', 'Task updated successfully!');
+    }
+
+    public function destroy($id)
+    {
+        $folder = Folder::findOrFail($id);
+
+
+        if ($folder->user_id !== auth()->id()) {
+            return redirect()->route('tasks.index')->with('error', 'This folder is not yours.');
+        }
+
+        //proverqvame da nqma papki ili faylove v papkata
+        $hasTasks = Task::where('parent_id', $id)->exists();
+        $hasSubfolders = Folder::where('parent_id', $id)->exists();
+
+        if ($hasTasks || $hasSubfolders) {
+            return redirect()->route('tasks.index')->with('error', 'This folder contains tasks or subfolders. Delete them first and the you can delete the path named - ' . $folder->name);
+        }
+
+
+        $folder->delete();
+
+        return redirect()->route('tasks.index')->with('success', 'Folder deleted successfully.');
+    }
+
 }

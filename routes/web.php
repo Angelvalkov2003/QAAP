@@ -38,5 +38,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/folders/create', [FolderController::class, 'create'])->name('folders.create');
     Route::post('/folders', [FolderController::class, 'store'])->name('folders.store');
     Route::get('/folders/{id}', [FolderController::class, 'show'])->name('folders.show');
+    Route::get('/folders/{id}/edit', [FolderController::class, 'edit'])->name('folders.edit');
+    Route::put('/folders/{id}', [FolderController::class, 'update'])->name('folders.update');
+    Route::delete('/folders/{id}', [FolderController::class, 'destroy'])->name('folders.destroy');
 });
 

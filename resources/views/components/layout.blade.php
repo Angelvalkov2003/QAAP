@@ -13,6 +13,11 @@
             {{ session('success') }}
         </div>
     @endif
+    @if (@session('error'))
+    <div id="flash" class="p04 text-center bg-red-50 text-red-500 font-bold">
+        {{ session('error') }}
+    </div>
+    @endif
 
     <header>
         <nav>

@@ -34,6 +34,7 @@
             <li>
                 <div class='card'>
                     <h3>{{ $folder->name }}</h3>
+                    <a href="{{ route('folders.edit', $folder->id) }}" class="btn my-2">Edit Folder</a>
                     <a href="{{ route('folders.show', $folder->id) }}" class="btn">View Details</a>
                 </div>
             </li>
