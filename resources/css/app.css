@@ -27,18 +27,6 @@ p {
     @apply my-2;
 }
 
-header {
-    @apply bg-white;
-
-    nav {
-        @apply flex items-center gap-5 max-w-screen-lg px-6 sm:px-12 py-4 mx-auto;
-    }
-
-    h1 {
-        @apply mr-auto;
-    }
-}
-
 form {
     @apply max-w-screen-sm mx-auto;
 }
@@ -91,10 +79,6 @@ textarea {
         @apply flex-col items-start; /* Stack content vertically on small screens */
     }
 
-    nav {
-        @apply flex-col items-start gap-3; /* Stack the navigation links vertically on mobile */
-    }
-
     .btn {
         @apply w-full; /* Make buttons full width on mobile */
     }
@@ -103,11 +87,6 @@ textarea {
     select,
     textarea {
         @apply w-full; /* Make form elements full width */
-    }
-
-    /* Add a mobile-friendly layout for header if needed */
-    header {
-        @apply px-4 py-2; /* Adjust padding for header */
     }
 
     .EMEA,
