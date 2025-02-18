@@ -21,7 +21,7 @@
 
     <header>
         <nav class="bg-white border-gray-200">
-            <div class="max-w-screen-2xl flex-wrap items-center justify-between mx-auto p-1 flex items-center justify-between">
+            <div class="max-w-screen-2xl flex-wrap items-center justify-between mx-auto flex items-center justify-between">
                 <a href="{{ route('tasks.index')}}" class="flex items-center space-x-3 rtl:space-x-reverse md:-mt-2">
                     <span class="self-center text-3xl font-semibold whitespace-nowrap text-blue-600">
                         QA allocation program
@@ -53,7 +53,7 @@
             
                     @auth
                     <li class="flex items-center space-x-2 md:text-lg">
-                        <span class="font-semibold">Hi, {{ Auth::user()->name }}</span>
+                        <span class="font-semibold">Hi, {{ Auth::user()->name }} </span>
                         <span class="text-gray-400">|</span>
                     </li>
                     <li>
