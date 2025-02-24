@@ -9,11 +9,13 @@ use App\Models\Folder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Illuminate\Support\Str;
+use PHPUnit\Framework\Attributes\Test;
 
 class TaskIndexTest extends TestCase
 {
 
-    /** @test */
+
+    #[Test]
     public function test_user_can_see_their_tasks_and_folders_on_index()
     {
 
